@@ -1,7 +1,7 @@
 from server import db
 
 
-class User(db.Model):
+class UserModel(db.Model):
     """
     Represents a user in the system.
 
