@@ -1,25 +1,42 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_cors import CORS  # Import Flask-CORS
+from dotenv import load_dotenv
 
-# Initialize the Flask application
-app = Flask(__name__)
+import os
 
-# Set up the configuration for the application
-# For a more secure approach, consider using environment variables for sensitive information
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/your_database_name'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy()
+jwt = JWTManager()
+migrate = Migrate()
 
-# Initialize SQLAlchemy with the Flask app
-db = SQLAlchemy(app)
+load_dotenv()
 
-# Initialize Flask-Migrate with the Flask app and SQLAlchemy DB
-migrate = Migrate(app, db)
 
-# Import the models (make sure to replace 'yourapp' with the actual name of your app)
+def create_app():
+    """
+    Creates a Flask application using the app factory pattern.
 
-# Import routes
-# from yourapp import routes
+    Returns:
+        Flask: The Flask application.
+    """
+    app = Flask(__name__)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    # Load configuration from environment variables
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'SQLALCHEMY_DATABASE_URI')
+
+    # Initialize extensions with app
+    db.init_app(app)
+    jwt.init_app(app)
+    migrate.init_app(app, db)
+
+    # Enable CORS
+    CORS(app)  # Add this line to enable Flask-CORS
+
+    # Import and register blueprints
+
+    app.config['DEBUG'] = True
+
+    return app
