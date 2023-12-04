@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class RegistrationResponseSchema(Schema):
+class CreateUserSchema(Schema):
     """
     Schema for validating registration data.
 
