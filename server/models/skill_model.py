@@ -1,3 +1,5 @@
+from server import db
+
 
 class SkillModel(db.Model):
     __tablename__ = 'skills'

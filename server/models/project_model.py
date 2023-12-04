@@ -1,3 +1,6 @@
+from server import db
+
+
 class ProjectModel(db.Model):
     __tablename__ = 'projects'
     project_id = db.Column(db.Integer, primary_key=True)

@@ -1,3 +1,5 @@
+from server import db
+
 
 class WorkHistoryModel(db.Model):
     __tablename__ = 'work_history'
