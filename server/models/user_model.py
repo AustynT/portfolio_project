@@ -1,7 +1,6 @@
 from server import db
-from server.models.base_model import BaseModel
-
 import bcrypt
+from server.models.base_model import BaseModel
 
 
 class UserModel(BaseModel):
@@ -27,11 +26,6 @@ class UserModel(BaseModel):
     email = db.Column(db.String(100), unique=True, nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
 
-    def __init__(self, **kwargs):
-        if 'password' in kwargs:
-            password = kwargs.pop('password')
-            password_hash = bcrypt.hashpw(password.encode(
-                'utf-8'), bcrypt.gensalt()).decode('utf-8')
     user_info = db.relationship('UserInfo', backref='user', uselist=False)
     projects = db.relationship('Project', backref='user')
     hobbies = db.relationship('Hobby', backref='user')
@@ -51,11 +45,23 @@ class UserModel(BaseModel):
         """
         if 'password' in kwargs:
             password = kwargs.pop('password')
-            password_hash = bcrypt.hashpw(password.encode(
-                'utf-8'), bcrypt.gensalt()).decode('utf-8')
+            password_hash = cls.hash_password(password)
             kwargs['password_hash'] = password_hash
 
         instance = cls(**kwargs)
         db.session.add(instance)
         db.session.commit()
         return instance
+
+    @classmethod
+    def hash_password(self, password: str) -> str:
+        """
+        Hashes the password.
+
+        Args:
+            password (str): The password to hash.
+
+        Returns:
+            str: The hashed password.
+        """
+        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
