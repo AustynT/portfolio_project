@@ -1,9 +1,9 @@
 from marshmallow import Schema, fields
 
 
-class CreateHobbySkillSchema(Schema):
+class CreateProjectSkillSchema(Schema):
     """
     Schema class for validating create type requests.
     """
-    hobby_id = fields.Integer(required=True)
+    project_id = fields.Integer(required=True)
     skill_id = fields.Integer(required=True)
