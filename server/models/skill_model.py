@@ -1,3 +1,4 @@
+from typing import Any
 from server import db
 from server.models.base_model import BaseModel
 
