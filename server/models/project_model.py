@@ -1,5 +1,5 @@
 from server import db
-from .base_model import BaseModel
+from server.models.base_model import BaseModel
 
 
 class ProjectModel(BaseModel):
