@@ -1,0 +1,15 @@
+{
+    "workbench.commandPalette.experimental.enableNaturalLanguageSearch": false,
+    "editor.formatOnType": false,
+    "editor.defaultFormatter": "ms-python.vscode-pylance",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.indexing": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.logLevel": "Error",
+    "pylint.importStrategy": "fromEnvironment",
+    "pylint.args": [
+        "\"pylint.args\": [\"--line-to-long\"]"
+    ]
+}
