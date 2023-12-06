@@ -5,4 +5,5 @@ class DeleteHobbySkillSchema(Schema):
     """
     Schema class for validating delete type requests.
     """
-    id = fields.Int(required=True)
+    hobby_id = fields.Integer(required=True)
+    skill_id = fields.Integer(required=True)

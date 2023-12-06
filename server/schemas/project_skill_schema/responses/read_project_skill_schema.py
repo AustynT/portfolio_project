@@ -5,5 +5,5 @@ class ReadHobbySkillSchema(Schema):
     """
     Schema class for validating read type requests.
     """
-    hobby_id = fields.Integer(required=True)
-    skill_id = fields.Integer(required=True)
+    hobby_id = fields.Integer()
+    skill_id = fields.Integer()
