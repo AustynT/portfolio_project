@@ -1,7 +1,8 @@
 from server import db
+from server.models.base_model import BaseModel
 
 
-class WorkHistoryModel(db.Model):
+class WorkHistoryModel(BaseModel):
     __tablename__ = 'work_history'
     work_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))

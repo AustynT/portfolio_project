@@ -1,7 +1,8 @@
 from server import db
+from server.models.base_model import BaseModel
 
 
-class Hobby(db.Model):
+class Hobby(BaseModel):
     __tablename__ = 'hobbies'
     hobby_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))

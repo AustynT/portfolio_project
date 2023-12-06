@@ -1,7 +1,8 @@
 from server import db
+from server.models.base_model import BaseModel
 
 
-class SkillModel(db.Model):
+class SkillModel(BaseModel):
     __tablename__ = 'skills'
     skill_id = db.Column(db.Integer, primary_key=True)
     skill_name = db.Column(db.String(50), nullable=False, unique=True)

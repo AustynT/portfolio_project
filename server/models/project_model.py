@@ -1,7 +1,7 @@
 from server import db
+from .base_model import BaseModel
 
-
-class ProjectModel(db.Model):
+class ProjectModel(BaseModel):
     __tablename__ = 'projects'
     project_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))

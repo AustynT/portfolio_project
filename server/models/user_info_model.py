@@ -1,7 +1,8 @@
 from server import db
+from server.models.base_model import BaseModel
 
 
-class UserInfoModel(db.Model):
+class UserInfoModel(BaseModel):
     """
     Represents additional information about a user.
 

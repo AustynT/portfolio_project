@@ -1,7 +1,8 @@
 from server import db
+from server.models.base_model import BaseModel
 
 
-class UserSkillModel(db.Model):
+class UserSkillModel(BaseModel):
     """
     Represents the skills of a user.
 
