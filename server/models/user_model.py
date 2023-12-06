@@ -1,5 +1,6 @@
-from server import db
+
 import bcrypt
+from server import db
 from server.models.base_model import BaseModel
 
 
@@ -53,8 +54,23 @@ class UserModel(BaseModel):
         db.session.commit()
         return instance
 
+    # overwrite the parent update method to hash the password if it is updated
+    def update(self, **kwargs):
+        """
+        Update the user instance.
+
+        Args:
+            **kwargs: Keyword arguments for the user attributes.
+        """
+        if 'password' in kwargs:
+            password = kwargs.pop('password')
+            password_hash = self.hash_password(password)
+            kwargs['password_hash'] = password_hash
+
+        super().update(**kwargs)
+
     @classmethod
-    def hash_password(self, password: str) -> str:
+    def hash_password(cls, password: str) -> str:
         """
         Hashes the password.
 
