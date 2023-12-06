@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class ReadProjectRequestSchema(Schema):
+class ReadProjectSchema(Schema):
     """
     Schema class for validating read type requests.
     """

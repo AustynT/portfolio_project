@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class DeleteProjectRequestSchema(Schema):
+class DeleteProjectSchema(Schema):
     """
     Schema class for validating delete type requests.
     """

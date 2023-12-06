@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class CreateProjectRequest(Schema):
+class CreateProjectSchema(Schema):
     """
     Schema class for validating create type requests.
     """
