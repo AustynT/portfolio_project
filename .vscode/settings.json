@@ -1,13 +1,14 @@
 {
     "workbench.commandPalette.experimental.enableNaturalLanguageSearch": false,
     "editor.formatOnType": false,
-    "editor.defaultFormatter": "ms-python.vscode-pylance",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.autopep8",
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.pytestParameters": true,
     "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.logLevel": "Error",
+    "python.analysis.logLevel": "Warning",
     "pylint.importStrategy": "fromEnvironment",
     "pylint.args": [
         "\"pylint.args\": [\"--line-to-long\"]"
