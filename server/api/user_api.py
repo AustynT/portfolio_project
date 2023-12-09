@@ -4,54 +4,52 @@ from server.models.user_model import UserModel
 from server.schemas.user_schema import UserSchema
 
 
-class ProjectsApi:
+class UsersApi:
     """
-    API class for managing projects.
+    API class for managing users.
     """
 
     def __init__(self):
-        self.bp_project = Blueprint('project', __name__, url_prefix='/project')
-        self.bp_project.route(
+        self.bp_user = Blueprint('users', __name__, url_prefix='/user')
+        self.bp_user.route(
             '/', methods=['GET'])(jwt_required()(self.get_users))
-        self.bp_project.route('/<int:user_ids>',
-                              methods=['GET'])(self.get_user_by_id)
-        self.bp_project.route(
+        self.bp_user.route(
+            '/<int:user_id>', methods=['GET'])(self.get_user_by_id)
+        self.bp_user.route(
             '/', methods=['POST'])(jwt_required()(self.create_user))
-        self.bp_project.route('/<int:user_ids>',
-                              methods=['PUT'])(jwt_required()(self.update_user))
-        self.bp_project.route(
-            '/<int:user_ids>', methods=['DELETE'])(jwt_required()(self.delete_user))
+        self.bp_user.route(
+            '/<int:user_id>', methods=['PUT'])(jwt_required()(self.update_user))
+        self.bp_user.route(
+            '/<int:user_id>', methods=['DELETE'])(jwt_required()(self.delete_user))
 
         self.request_schema = UserSchema().get_request_schemas()
         self.response_schema = UserSchema().get_response_schemas()
 
     def get_users(self):
         """
-        Get all projects.
+        Get all users.
 
         Returns:
-            A JSON response containing the serialized projects.
+            A JSON response containing the serialized users.
         """
-        projects = UserModel.query.all()
-        return jsonify([project.serialize() for project in projects])
+        users = UserModel.get_all()
+        return jsonify([user.serialize() for user in users])
 
     def get_user_by_id(self, user_id):
         """
-        Get a project by its ID.
+        Get a user by its ID.
 
         Args:
-            project_id (int): The ID of the project.
+            user_id (int): The ID of the user.
 
         Returns:
-            A JSON response containing the serialized project if found, or a JSON response with an error message and status code 404 if not found.
+            A JSON response containing the serialized user if found, or a JSON response with an error message and status code 404 if not found.
         """
-        data = self.request_schema['read'].load(request.get_json())
-
-        project = UserModel.query.get(user_id)
-        if project:
-            return jsonify(project.serialize())
+        user = UserModel.get_by_id(user_id)
+        if user:
+            return jsonify(user.serialize())
         else:
-            return jsonify({"message": "Project not found"}), 404
+            return jsonify({"message": "User not found"}), 404
 
     def create_user(self):
         """
@@ -61,10 +59,7 @@ class ProjectsApi:
             A JSON response containing the created user's information.
         """
         data = self.request_schema['create']
-        user = UserModel()
-
-        user.session.add(data)
-        user.session.commit()
+        user = UserModel.create(**data)
 
         return jsonify(self.response_schema['create'].dump({
             "user_id": user.user_id,
@@ -75,25 +70,24 @@ class ProjectsApi:
 
     def update_user(self, user_id):
         """
-        Update a project by its ID.
+        Update a user by its ID.
 
         Args:
-            user_id (int): The ID of the project.
-        Returns:
-            A JSON response containing the serialized project if found, or a JSON response with an error message and status code 404 if not found.
-        """
+            user_id (int): The ID of the user.
 
-        user = UserModel.query.get(user_id)
+        Returns:
+            A JSON response containing the serialized user if found, or a JSON response with an error message and status code 404 if not found.
+        """
+        user = UserModel.get_by_id(user_id)
         if not user:
-            return jsonify({"message": "Project not found"}), 404
+            return jsonify({"message": "User not found"}), 404
 
         data = self.request_schema['update'].load(request.get_json())
 
-        user.session.add(data)
-        user.session.commit()
+        user.update(**data)
 
         return jsonify(self.response_schema['update'].dump({
-            "id": user.id,
+            "user_id": user.user_id,
             "username": user.username,
             "email": user.email,
             "password": user.password
@@ -101,18 +95,18 @@ class ProjectsApi:
 
     def delete_user(self, user_id):
         """
-        Delete a project by its ID.
+        Delete a user by its ID.
 
         Args:
-            user_id (int): The ID of the project.
+            user_id (int): The ID of the user.
 
         Returns:
             A JSON response with a message indicating the user was deleted if found, or a JSON response with an error message and status code 404 if not found.
         """
-        user = UserModel.query.get(user_id)
+        user = UserModel.get_by_id(user_id)
         if not user:
             return jsonify({"message": "User not found"}), 404
 
-        user.session.delete(user)
-        user.session.commit()
+        user.delete()
+
         return jsonify({"message": "User deleted"}), 200

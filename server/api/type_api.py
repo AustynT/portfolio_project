@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from typing import Literal
+from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 from server.models.type_model import TypeModel
 from server.schemas.type_schema import TypeSchema
@@ -9,7 +10,7 @@ class TypeApi:
     API class for managing types.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.bp_type = Blueprint('type', __name__, url_prefix='/type')
         self.bp_type.route(
             '/', methods=['GET'])(self.get_types)
@@ -22,11 +23,13 @@ class TypeApi:
         self.bp_type.route(
             '/<int:type_id>', methods=['DELETE'])(jwt_required()(self.delete_type))
 
-        self.request_schema = TypeSchema().get_request_schemas()
-        self.response_schema = TypeSchema().get_response_schemas()
+        self.request_schema: dict[str, TypeSchema] = TypeSchema(
+        ).get_request_schemas()
+        self.response_schema: dict[str, TypeSchema] = TypeSchema(
+        ).get_response_schemas()
         self.model = TypeModel
 
-    def get_types(self):
+    def get_types(self) -> Response:
         """
         Get all types.
 
@@ -36,7 +39,7 @@ class TypeApi:
         types = self.model.query.all()
         return jsonify([type.serialize() for type in types])
 
-    def get_type_by_id(self, type_id):
+    def get_type_by_id(self, type_id) -> Response | tuple[Response, Literal[404]]:
         """
         Get a type by its ID.
 
@@ -52,7 +55,7 @@ class TypeApi:
         else:
             return jsonify({"message": "Type not found"}), 404
 
-    def create_type(self):
+    def create_type(self) -> tuple[Response, Literal[201]] | tuple[Response, Literal[500]]:
         """
         Creates a new type.
 
@@ -68,7 +71,7 @@ class TypeApi:
 
         return jsonify({"message": "Error creating type"}), 500
 
-    def update_type(self, type_id):
+    def update_type(self, type_id) -> tuple[Response, Literal[200]] | tuple[Response, Literal[404]]:
         """
         Updates a type.
 
@@ -87,7 +90,7 @@ class TypeApi:
 
         return jsonify({"message": "Type not found"}), 404
 
-    def delete_type(self, type_id):
+    def delete_type(self, type_id) -> tuple[Response, Literal[204]] | tuple[Response, Literal[404]]:
         """
         Deletes a type.
 
