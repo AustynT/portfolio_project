@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from server.models.project_model import ProjectModel
-from server.schemas.user_schema import UserSchema as ProjectSchema
+from server.schemas.project_schema import ProjectSchema
 
 
 class ProjectsApi:

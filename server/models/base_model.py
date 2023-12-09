@@ -12,6 +12,10 @@ class BaseModel(db.Model):
     """
 
     __abstract__ = True
+    timestamp = db.func.current_timestamp()
+    created_at = db.Column(db.DateTime, default=timestamp)
+    updated_at = db.Column(db.DateTime, default=timestamp,
+                           onupdate=timestamp)
 
     @classmethod
     def create(cls, **kwargs) -> 'BaseModel':

@@ -103,3 +103,12 @@ class AuthAPI:
         access_token = create_access_token(identity=user_id)
         refresh_token = create_refresh_token(identity=user_id)
         return access_token, refresh_token
+
+    def get_blueprint(self):
+        """
+        Returns the blueprint for authentication endpoints.
+
+        Returns:
+            flask.Blueprint: The blueprint for authentication endpoints.
+        """
+        return self.bp_auth
