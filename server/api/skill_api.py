@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from typing import Literal
+from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 from server.models.skill_model import SkillModel
 from server.schemas.skill_schema import SkillSchema
@@ -66,7 +67,7 @@ class SkillApi:
         else:
             return jsonify({"message": "Invalid request data"}), 400
 
-    def update_skill(self, skill_id):
+    def update_skill(self, skill_id) -> tuple[Response, Literal[200]] | tuple[Response, Literal[400]]:
         """
         Updates a skill.
 
@@ -82,3 +83,19 @@ class SkillApi:
             return jsonify(skill.serialize()), 200
         else:
             return jsonify({"message": "Invalid request data"}), 400
+
+    def delete_skill(self, skill_id) -> tuple[Response, Literal[200]] | tuple[Response, Literal[404]]:
+        """
+        Deletes a skill.
+
+        Args:
+            skill_id (int): The ID of the skill.
+
+        Returns:
+            A JSON response with an error message and status code 404 if the skill is not found, or a JSON response with an error message and status code 500 if unsuccessful.
+        """
+        skill = self.model.delete_skill(skill_id)
+        if skill:
+            return jsonify({"message": "Skill deleted"}), 200
+        else:
+            return jsonify({"message": "Skill not found"}), 404

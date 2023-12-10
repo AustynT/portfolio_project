@@ -1,17 +1,17 @@
-from .requests.create_hobby_skill_schema import CreateHobbySkillSchema as CreateHobbySkillRequestSchema
-from .requests.read_hobby_skill_schema import ReadHobbySkillSchema as ReadHobbySkillRequestSchema
-from .requests.update_hobby_skill_schema import UpdateHobbySkillSchema as UpdateHobbySkillRequestSchema
-from .requests.delete_hobby_skill_schema import DeleteHobbySkillSchema as DeleteHobbySkillRequestSchema
+from .requests.create_user_skill_schema import CreateUserSkillSchema as CreateUserSkillRequestSchema
+from .requests.read_user_skill_schema import ReadUserSkillSchema as ReadUserSkillRequestSchema
+from .requests.update_user_skill_schema import UpdateUserSkillSchema as UpdateUserSkillRequestSchema
+from .requests.delete_user_skill_schema import DeleteUserSkillSchema as DeleteUserSkillRequestSchema
 
-from .responses.create_hobby_skill_schema import CreateHobbySkillSchema as CreateHobbySkillResponseSchema
-from .responses.read_hobby_skill_schema import ReadHobbySkillSchema as ReadHobbySkillsResponseSchema
-from .responses.update_hobby_skill_schema import UpdateHobbySkillSchema as UpdateHobbySkillResponseSchema
-from .responses.delete_hobby_skill_schema import DeleteHobbySkillSchema as DeleteHobbySkillsResponseSchema
+from .responses.create_user_skill_schema import CreateUserSkillSchema as CreateUserSkillResponseSchema
+from .responses.read_user_skill_schema import ReadUserSkillSchema as ReadUserSkillsResponseSchema
+from .responses.update_user_skill_schema import UpdateUserSkillSchema as UpdateUserSkillResponseSchema
+from .responses.delete_user_skill_schema import DeleteUserSkillSchema as DeleteUserSkillsResponseSchema
 
 
-class HobbySkillSchema:
+class UserSkillSchema:
     """
-    Schema class for validating hobby_skill requests and responses.
+    Schema class for validating User_skill requests and responses.
     """
 
     def get_request_schemas(self):
@@ -22,10 +22,10 @@ class HobbySkillSchema:
             dict: A dictionary containing all request schemas.
         """
         return {
-            'create': CreateHobbySkillRequestSchema(),
-            'read': ReadHobbySkillRequestSchema(),
-            'update': UpdateHobbySkillRequestSchema(),
-            'delete': DeleteHobbySkillRequestSchema()
+            'create': CreateUserSkillRequestSchema(),
+            'read': ReadUserSkillRequestSchema(),
+            'update': UpdateUserSkillRequestSchema(),
+            'delete': DeleteUserSkillRequestSchema()
         }
 
     def get_response_schemas(self):
@@ -36,8 +36,8 @@ class HobbySkillSchema:
             dict: A dictionary containing all response schemas.
         """
         return {
-            'create': CreateHobbySkillResponseSchema(),
-            'read': ReadHobbySkillsResponseSchema(),
-            'update': UpdateHobbySkillResponseSchema(),
-            'delete': DeleteHobbySkillsResponseSchema()
+            'create': CreateUserSkillResponseSchema(),
+            'read': ReadUserSkillsResponseSchema(),
+            'update': UpdateUserSkillResponseSchema(),
+            'delete': DeleteUserSkillsResponseSchema()
         }

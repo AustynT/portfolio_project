@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class ReadHobbySkillSchema(Schema):
+class ReadUserSkillSchema(Schema):
     """
     Schema class for validating read type requests.
     """

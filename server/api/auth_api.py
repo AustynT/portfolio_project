@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from typing import Literal
+from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_jwt_extended import create_access_token, create_refresh_token
 
@@ -23,7 +24,7 @@ class AuthAPI:
         create_tokens(user_id): Creates access and refresh tokens for the given user ID.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
         self.bp_auth.add_url_rule(
             '/register', 'register', self.register, methods=['POST'])
@@ -32,7 +33,7 @@ class AuthAPI:
         self.request_schema = AuthSchema().get_request_schemas()
         self.response_schema = AuthSchema().get_response_schemas()
 
-    def register(self):
+    def register(self) -> tuple[Response, Literal[400]] | tuple[Response, Literal[409]] | Response:
         """
         Registers a new user.
 
@@ -64,7 +65,7 @@ class AuthAPI:
             "fresh_jwt_token": refresh_token
         }))
 
-    def login(self):
+    def login(self) -> tuple[Response, Literal[400]] | Response | None:
         """
         Authenticates a user and returns JWT tokens if the credentials are valid.
 
@@ -90,7 +91,7 @@ class AuthAPI:
                 "fresh_jwt_token": refresh_token
             }), 200)
 
-    def create_tokens(self, user_id):
+    def create_tokens(self, user_id) -> tuple[str, str]:
         """
         Create access and refresh tokens for the given user ID.
 
@@ -104,7 +105,7 @@ class AuthAPI:
         refresh_token = create_refresh_token(identity=user_id)
         return access_token, refresh_token
 
-    def get_blueprint(self):
+    def get_blueprint(self) -> Blueprint:
         """
         Returns the blueprint for authentication endpoints.
 

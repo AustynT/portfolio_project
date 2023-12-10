@@ -1,9 +1,9 @@
 from marshmallow import Schema, fields
 
 
-class DeleteHobbySkillSchema(Schema):
+class UpdateUserSkillSchema(Schema):
     """
-    Schema class for validating delete type requests.
+    Schema class for validating update type requests.
     """
     hobby_id = fields.Integer(required=True)
     skill_id = fields.Integer(required=True)
