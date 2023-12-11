@@ -4,7 +4,7 @@ from server.models.project_model import ProjectModel
 from server.schemas.project_schema import ProjectSchema
 
 
-class ProjectsApi:
+class ProjectApi:
     """ 
     API class for managing projects.
     """

@@ -9,7 +9,7 @@ from server.models.user_model import UserModel
 from server.schemas.auth_schema import AuthSchema
 
 
-class AuthAPI:
+class AuthApi:
     """
     API class for handling authentication-related endpoints.
 

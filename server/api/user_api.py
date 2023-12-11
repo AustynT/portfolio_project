@@ -4,7 +4,7 @@ from server.models.user_model import UserModel
 from server.schemas.user_schema import UserSchema
 
 
-class UsersApi:
+class UserApi:
     """
     API class for managing users.
     """

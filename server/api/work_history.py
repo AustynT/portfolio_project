@@ -5,7 +5,7 @@ from server.models.work_history_model import WorkHistoryModel
 from server.schemas.work_history_schema import WorkHistorySchema
 
 
-class WrokHistoryApi:
+class WorkHistoryApi:
 
     def __init__(self):
         self.bp_work_history = Blueprint(
