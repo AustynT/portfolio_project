@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, make_response, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
@@ -11,33 +11,33 @@ db = SQLAlchemy()
 jwt = JWTManager()
 migrate = Migrate()
 
-load_dotenv()
 
-
-def create_app():
+def create_app() -> Flask:
     """
-    Creates a Flask application using the app factory pattern.
-
-    Returns:
-        Flask: The Flask application.
+    Creates a Flask app using the app factory pattern.
     """
+    load_dotenv()
+
     app = Flask(__name__)
-
-    # Load configuration from environment variables
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
         'SQLALCHEMY_DATABASE_URI')
+    app.debug = os.getenv('FLASK_ENV') == 'development'
 
-    # Initialize extensions with app
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
     from .api import register_routes
     register_routes(app)
-    # Enable CORS
-    CORS(app)  # Add this line to enable Flask-CORS
 
-    # Import and register blueprints
+    # Configure CORS
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True,
+         allow_headers=["Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With"])
 
-    app.config['DEBUG'] = True
+    @app.after_request
+    def add_headers(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Access-Control-Allow-Headers,Authorization,X-Requested-With'
+        return response
 
     return app
