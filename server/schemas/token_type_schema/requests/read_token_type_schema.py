@@ -2,5 +2,5 @@ from marshmallow import Schema, fields
 from marshmallow import Schema, fields
 
 
-class CreateTokenTypeSchema(Schema):
+class ReadTokenTypeSchema(Schema):
     id = fields.Integer(required=True)

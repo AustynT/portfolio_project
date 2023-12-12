@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
 
 
-class CreateTokenTypeSchema(Schema):
+class UpdateTokenTypeSchema(Schema):
     id = fields.Integer(required=True)
     name = fields.String(required=True)
