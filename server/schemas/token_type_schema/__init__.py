@@ -1,3 +1,4 @@
+from typing import Any
 from .requests.create_token_type_schema import CreateTokenTypeSchema as CreateTokenTypeRequestSchema
 from .requests.read_token_type_schema import ReadTokenTypeSchema as ReadTokenTypeRequestSchema
 from .requests.update_token_type_schema import UpdateTokenTypeSchema as UpdateTokenTypeRequestSchema
@@ -14,7 +15,7 @@ class TokenTypeSchema:
     Schema class for validating token type requests and responses.
     """
 
-    def get_request_schemas(self):
+    def get_request_schemas(self) -> dict[str, Any]:
         """
         Get all request schemas.
 
@@ -28,7 +29,7 @@ class TokenTypeSchema:
             'delete': DeleteTokenTypeRequestSchema()
         }
 
-    def get_response_schemas(self):
+    def get_response_schemas(self) -> dict[str, Any]:
         """
         Get all response schemas.
 
