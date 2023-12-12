@@ -31,7 +31,8 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
-
+    from .api import register_routes
+    register_routes(app)
     # Enable CORS
     CORS(app)  # Add this line to enable Flask-CORS
 

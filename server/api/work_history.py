@@ -13,13 +13,13 @@ class WorkHistoryApi:
         self.bp_work_history.route(
             '/', methods=['GET'])(self.get_work_history)
         self.bp_work_history.route(
-            '/<int:work_history_id>', methods=['GET'])(self.get_work_history_by_id)
-        self.bp_work_history.route(
             '/', methods=['POST'])(jwt_required()(self.create_work_history))
         self.bp_work_history.route(
-            '/<int:work_history_id>', methods=['PUT'])(jwt_required()(self.update_work_history))
+            '/<int:work_history_id>', methods=['GET'], endpoint="get_work_history_by_id")(self.get_work_history_by_id)
         self.bp_work_history.route(
-            '/<int:work_history_id>', methods=['DELETE'])(jwt_required()(self.delete_work_history))
+            '/<int:work_history_id>', methods=['PUT'], endpoint="update_work_history")(jwt_required()(self.update_work_history))
+        self.bp_work_history.route(
+            '/<int:work_history_id>', methods=['DELETE'],  endpoint="delete_work_history")(jwt_required()(self.delete_work_history))
 
         self.request_schema = WorkHistorySchema().get_request_schemas()
         self.response_schema = WorkHistorySchema().get_response_schemas()

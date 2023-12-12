@@ -2,7 +2,7 @@ from typing import Literal
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 from server.models.user_skill_model import UserSkillModel
-from server.schemas.user_skill_schmea import UserSkillSchema
+from server.schemas.user_skill_schema import UserSkillSchema
 
 
 class UserSkillApi:

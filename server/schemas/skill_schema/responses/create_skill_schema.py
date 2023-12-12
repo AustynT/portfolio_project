@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class CreateHobbySkillSchema(Schema):
+class CreateSkillSchema(Schema):
     """
     Schema for creating a hobby skill.
     """

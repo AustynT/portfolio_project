@@ -11,17 +11,17 @@ class HobbyApi:
     """
 
     def __init__(self) -> None:
-        self.blueprint = Blueprint('hobby', __name__, url_prefix='/hobby')
-        self.blueprint.route(
+        self.bp_hobby = Blueprint('hobbies', __name__, url_prefix='/hobbies')
+        self.bp_hobby.route(
             '/', methods=['GET'])(self.get_hobbies)
-        self.blueprint.route('/<int:hobby_id>',
-                             methods=['GET'])(self.get_hobby_by_id)
-        self.blueprint.route(
+        self.bp_hobby.route(
             '/', methods=['POST'])(jwt_required())(self.create_hobby)
-        self.blueprint.route('/<int:hobby_id>',
-                             methods=['PUT'])(jwt_required())(self.update_hobby)
-        self.blueprint.route('/<int:hobby_id>',
-                             methods=['DELETE'])(jwt_required()(self.delete_hobby))
+        self.bp_hobby.route('/<int:hobby_id>',
+                            methods=['GET'], endpoint="get_hobby_by_id")(self.get_hobby_by_id)
+        self.bp_hobby.route('/<int:hobby_id>',
+                            methods=['PUT'], endpoint="update_hobby")(jwt_required())(self.update_hobby)
+        self.bp_hobby.route('/<int:hobby_id>',
+                            methods=['DELETE'],  endpoint="delete_hobby")(jwt_required()(self.delete_hobby))
 
         self.request_schema: dict[str, HobbySchema] = HobbySchema
         self.response_schema: dict[str, HobbySchema] = HobbySchema

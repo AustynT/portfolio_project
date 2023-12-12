@@ -1,4 +1,5 @@
 from server import db
+from sqlalchemy import func
 
 
 class BaseModel(db.Model):
@@ -12,7 +13,7 @@ class BaseModel(db.Model):
     """
 
     __abstract__ = True
-    timestamp = db.func.current_timestamp()
+    timestamp = db.Column(db.DateTime, default=func.current_timestamp())
     created_at = db.Column(db.DateTime, default=timestamp)
     updated_at = db.Column(db.DateTime, default=timestamp,
                            onupdate=timestamp)

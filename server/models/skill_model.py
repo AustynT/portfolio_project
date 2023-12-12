@@ -1,4 +1,3 @@
-from typing import Any
 from server import db
 from server.models.base_model import BaseModel
 
@@ -19,6 +18,6 @@ class SkillModel(BaseModel):
     skill_name = db.Column(db.String(50), nullable=False, unique=True)
 
     # Relationships
-    user_skills = db.relationship('UserSkill', backref='skill')
-    project_skills = db.relationship('ProjectSkill', backref='skill')
-    hobby_skills = db.relationship('HobbySkill', backref='skill')
+    user_skills = db.relationship('UserSkillModel', backref='skill')
+    project_skills = db.relationship('ProjectSkillModel', backref='skill')
+    hobby_skills = db.relationship('HobbySkillModel', backref='skill')

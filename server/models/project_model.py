@@ -26,4 +26,4 @@ class ProjectModel(BaseModel):
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
 
     # Relationship for project skills
-    project_skills = db.relationship('ProjectSkill', backref='project')
+    project_skills = db.relationship('ProjectSkillModel', backref='project')

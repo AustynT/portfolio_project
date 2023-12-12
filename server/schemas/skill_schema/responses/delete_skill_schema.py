@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class DeleteHobbySkillSchema(Schema):
+class DeleteSkillSchema(Schema):
     """
     Schema for deleting a hobby skill.
     """
