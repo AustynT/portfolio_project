@@ -17,7 +17,7 @@ class WorkHistoryModel(BaseModel):
     """
 
     __tablename__ = 'work_history'
-    work_id = db.Column(db.Integer, primary_key=True)
+    work_history_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     company_name = db.Column(db.String(100), nullable=False)
     job_title = db.Column(db.String(100), nullable=False)
