@@ -1,4 +1,6 @@
+from datetime import datetime
 from server import db
+from sqlalchemy import func
 
 
 class BaseModel(db.Model):
@@ -12,10 +14,9 @@ class BaseModel(db.Model):
     """
 
     __abstract__ = True
-    timestamp = db.func.current_timestamp()
-    created_at = db.Column(db.DateTime, default=timestamp)
-    updated_at = db.Column(db.DateTime, default=timestamp,
-                           onupdate=timestamp)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     @classmethod
     def create(cls, **kwargs) -> 'BaseModel':

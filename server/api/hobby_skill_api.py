@@ -1,8 +1,8 @@
 from typing import Literal
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
-from server.models.type_model import TypeModel
-from server.schemas.type_schema import TypeSchema
+from server.models.hobby_skill_model import HobbySkillModel
+from server.schemas.hobby_skill_schema import HobbySkillSchema
 
 
 class HobbySkillApi:
@@ -16,19 +16,19 @@ class HobbySkillApi:
         self.bp_hobby_skill.route(
             '/', methods=['GET'])(self.get_hobby_skills)
         self.bp_hobby_skill.route('/<int:hobby_skill_id>',
-                                  methods=['GET'])(self.get_hobby_skill_by_id)
+                                  methods=['GET'], endpoint="get_hobby_skill_by_id")(self.get_hobby_skill_by_id)
         self.bp_hobby_skill.route(
             '/', methods=['POST'])(jwt_required())(self.create_hobby_skill)
         self.bp_hobby_skill.route('/<int:hobby_skill_id>',
-                                  methods=['PUT'])(jwt_required())(self.update_hobby_skill)
+                                  methods=['PUT'], endpoint="update_hobby_skill")(jwt_required())(self.update_hobby_skill)
         self.bp_hobby_skill.route(
-            '/<int:hobby_skill_id>', methods=['DELETE'])(jwt_required()(self.delete_hobby_skill))
+            '/<int:hobby_skill_id>', methods=['DELETE'], endpoint="delete_hobby_skill")(jwt_required()(self.delete_hobby_skill))
 
-        self.request_schema: dict[str, TypeSchema] = TypeSchema(
+        self.request_schema: dict[str, HobbySkillSchema] = HobbySkillSchema(
         ).get_request_schemas()
-        self.response_schema: dict[str, TypeSchema] = TypeSchema(
+        self.response_schema: dict[str, HobbySkillSchema] = HobbySkillSchema(
         ).get_response_schemas()
-        self.model = TypeModel
+        self.model = HobbySkillModel()
 
     def get_hobby_skills(self) -> Response:
         """

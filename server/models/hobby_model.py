@@ -11,4 +11,4 @@ class HobbyModel(BaseModel):
     description = db.Column(db.Text)
 
     # Relationship for hobby skills
-    hobby_skills = db.relationship('HobbySkill', backref='hobby')
+    hobby_skills = db.relationship('HobbySkillModel', backref='hobby')

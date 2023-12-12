@@ -16,13 +16,14 @@ class ProjectSkillApi:
         self.bp_project_skill.route(
             '/', methods=['GET'])(self.get_project_skills)
         self.bp_project_skill.route(
-            '/<int:project_skill_id>', methods=['GET'])(self.get_project_skill_by_id)
-        self.bp_project_skill.route(
             '/', methods=['POST'])(jwt_required())(self.create_project_skill)
         self.bp_project_skill.route(
-            '/<int:project_skill_id>', methods=['PUT'])(jwt_required())(self.update_project_skill)
+            '/<int:project_skill_id>', methods=['GET'], endpoint="get_project_skill_by_id")(self.get_project_skill_by_id)
+
         self.bp_project_skill.route(
-            '/<int:project_skill_id>', methods=['DELETE'])(jwt_required()(self.delete_project_skill))
+            '/<int:project_skill_id>', methods=['PUT'], endpoint="update_project_skill")(jwt_required())(self.update_project_skill)
+        self.bp_project_skill.route(
+            '/<int:project_skill_id>', methods=['DELETE'], endpoint="delete_project_skill")(jwt_required()(self.delete_project_skill))
 
         self.request_schema = ProjectSkillSchema().get_request_schemas()
         self.response_schema = ProjectSkillSchema().get_response_schemas()

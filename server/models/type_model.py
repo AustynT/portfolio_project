@@ -17,5 +17,5 @@ class TypeModel(BaseModel):
     type_name = db.Column(db.String(50), nullable=False, unique=True)
 
     # Relationships
-    projects = db.relationship('Project', backref='type')
-    hobbies = db.relationship('Hobby', backref='type')
+    projects = db.relationship('ProjectModel', backref='type')
+    hobbies = db.relationship('HobbyModel', backref='type')

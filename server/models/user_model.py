@@ -27,11 +27,11 @@ class UserModel(BaseModel):
     email = db.Column(db.String(100), unique=True, nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
 
-    user_info = db.relationship('UserInfo', backref='user', uselist=False)
-    projects = db.relationship('Project', backref='user')
-    hobbies = db.relationship('Hobby', backref='user')
-    work_history = db.relationship('WorkHistory', backref='user')
-    user_skills = db.relationship('UserSkill', backref='user')
+    user_info = db.relationship('UserInfoModel', backref='user', uselist=False)
+    projects = db.relationship('ProjectModel', backref='user')
+    hobbies = db.relationship('HobbyModel', backref='user')
+    work_history = db.relationship('WorkHistoryModel', backref='user')
+    user_skills = db.relationship('UserSkillModel', backref='user')
 
     @classmethod
     def create(cls, **kwargs):

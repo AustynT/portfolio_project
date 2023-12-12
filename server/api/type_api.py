@@ -12,22 +12,21 @@ class TypeApi:
 
     def __init__(self) -> None:
         self.bp_type = Blueprint('type', __name__, url_prefix='/type')
-        self.bp_type.route(
-            '/', methods=['GET'])(self.get_types)
-        self.bp_type.route('/<int:type_id>',
-                           methods=['GET'])(self.get_type_by_id)
+        self.bp_type.route('/', methods=['GET'])(self.get_types)
         self.bp_type.route(
             '/', methods=['POST'])(jwt_required())(self.create_type)
-        self.bp_type.route('/<int:type_id>',
-                           methods=['PUT'])(jwt_required())(self.update_type)
         self.bp_type.route(
-            '/<int:type_id>', methods=['DELETE'])(jwt_required()(self.delete_type))
+            '/<int:type_id>', methods=['GET'], endpoint="get_type_by_id")(self.get_type_by_id)
+        self.bp_type.route(
+            '/<int:type_id>', methods=['PUT'], endpoint="update_type")(jwt_required())(self.update_type)
+        self.bp_type.route(
+            '/<int:type_id>', methods=['DELETE'],  endpoint="delete_type")(jwt_required()(self.delete_type))
 
         self.request_schema: dict[str, TypeSchema] = TypeSchema(
         ).get_request_schemas()
         self.response_schema: dict[str, TypeSchema] = TypeSchema(
         ).get_response_schemas()
-        self.model = TypeModel
+        self.model = TypeModel()
 
     def get_types(self) -> Response:
         """

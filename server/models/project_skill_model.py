@@ -2,7 +2,7 @@ from server import db
 from server.models.base_model import BaseModel
 
 
-class ProjectSkill(BaseModel):
+class ProjectSkillModel(BaseModel):
     __tablename__ = 'project_skills'
     project_id = db.Column(db.Integer, db.ForeignKey(
         'projects.project_id'), primary_key=True)

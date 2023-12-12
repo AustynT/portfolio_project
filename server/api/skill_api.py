@@ -12,16 +12,15 @@ class SkillApi:
 
     def __init__(self):
         self.bp_skill = Blueprint('skill', __name__, url_prefix='/skill')
-        self.bp_skill.route(
-            '/', methods=['GET'])(self.get_skills)
-        self.bp_skill.route('/<int:skill_id>',
-                            methods=['GET'])(self.get_skill_by_id)
+        self.bp_skill.route('/', methods=['GET'])(self.get_skills)
         self.bp_skill.route(
             '/', methods=['POST'])(jwt_required())(self.create_skill)
-        self.bp_skill.route('/<int:skill_id>',
-                            methods=['PUT'])(jwt_required())(self.update_skill)
         self.bp_skill.route(
-            '/<int:skill_id>', methods=['DELETE'])(jwt_required()(self.delete_skill))
+            '/<int:skill_id>', methods=['GET'], endpoint='get_skill_by_id')(self.get_skill_by_id)
+        self.bp_skill.route(
+            '/<int:skill_id>', methods=['PUT'], endpoint='update_skill')(jwt_required())(self.update_skill)
+        self.bp_skill.route(
+            '/<int:skill_id>', methods=['DELETE'], endpoint='delete_skill')(jwt_required()(self.delete_skill))
 
         self.request_schema = SkillSchema().get_request_schemas()
         self.response_schema = SkillSchema().get_response_schemas()
