@@ -11,7 +11,7 @@ class TokenTypeApi:
     API class for managing token types.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.bp_token_type = Blueprint(
             'token_type', __name__, url_prefix='/token_type')
         self.bp_token_type.route(
@@ -29,7 +29,7 @@ class TokenTypeApi:
         self.response_schema = TokenTypeSchema().get_response_schemas()
         self.model = TokenTypeModel()
 
-    def get_token_types(self):
+    def get_token_types(self) -> Response:
         """
         Get all token_types.
 
@@ -39,7 +39,7 @@ class TokenTypeApi:
         token_types = self.model.get_all_token_types()
         return jsonify([token_type.serialize() for token_type in token_types])
 
-    def get_token_type_by_id(self, token_type_id):
+    def get_token_type_by_id(self, token_type_id) -> Response | tuple[Response, Literal[404]]:
         """
         Get a token_type by its ID.
 
@@ -55,7 +55,7 @@ class TokenTypeApi:
         else:
             return jsonify({"message": "TokenType not found"}), 404
 
-    def create_token_type(self):
+    def create_token_type(self) -> tuple[Response, Literal[400]] | Response | tuple[Response, Literal[500]]:
         """
         Creates a new token_type.
 
@@ -73,7 +73,7 @@ class TokenTypeApi:
             else:
                 return jsonify({"message": "TokenType could not be created"}), 500
 
-    def update_token_type(self, token_type_id):
+    def update_token_type(self, token_type_id) -> tuple[Response, Literal[400]] | Response | tuple[Response, Literal[404]]:
         """
         Updates a token_type.
 
@@ -95,7 +95,7 @@ class TokenTypeApi:
             else:
                 return jsonify({"message": "TokenType not found"}), 404
 
-    def delete_token_type(self, token_type_id):
+    def delete_token_type(self, token_type_id) -> tuple[Response, Literal[200]] | tuple[Response, Literal[404]]:
         """
         Deletes a token_type.
 
