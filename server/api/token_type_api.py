@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 
@@ -25,8 +25,10 @@ class TokenTypeApi:
         self.bp_token_type.route('/<int:token_type_id>', methods=[
                                  'DELETE'], endpoint='delete_token_type')(jwt_required()(self.delete_token_type))
 
-        self.request_schema = TokenTypeSchema().get_request_schemas()
-        self.response_schema = TokenTypeSchema().get_response_schemas()
+        self.request_schema: dict[str,
+                                  Any] = TokenTypeSchema().get_request_schemas()
+        self.response_schema: dict[str, Any] = TokenTypeSchema(
+        ).get_response_schemas()
         self.model = TokenTypeModel()
 
     def get_token_types(self) -> Response:
