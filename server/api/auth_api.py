@@ -6,6 +6,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 from server import db
 
 from server.models.user_model import UserModel
+# from server.models.token_model import TokenModel
 from server.schemas.auth_schema import AuthSchema
 
 

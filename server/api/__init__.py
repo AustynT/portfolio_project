@@ -1,3 +1,4 @@
+from server.api.test_api import TestApi
 from .auth_api import AuthApi
 from .user_api import UserApi
 from .user_info_api import UserInfoApi
@@ -35,3 +36,5 @@ def register_routes(app):
     app.register_blueprint(project_api.bp_project)
     project_skill_api = ProjectSkillApi()
     app.register_blueprint(project_skill_api.bp_project_skill)
+    test_api = TestApi()
+    app.register_blueprint(test_api.bp_test)
