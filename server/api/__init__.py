@@ -36,5 +36,3 @@ def register_routes(app):
     app.register_blueprint(project_api.bp_project)
     project_skill_api = ProjectSkillApi()
     app.register_blueprint(project_skill_api.bp_project_skill)
-    test_api = TestApi()
-    app.register_blueprint(test_api.bp_test)

@@ -30,7 +30,6 @@ def create_app() -> Flask:
     from .api import register_routes
     register_routes(app)
 
-    # Configure CORS
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True,
          allow_headers=["Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With"])
 
