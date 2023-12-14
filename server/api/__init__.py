@@ -1,4 +1,3 @@
-from server.api.test_api import TestApi
 from .auth_api import AuthApi
 from .user_api import UserApi
 from .user_info_api import UserInfoApi
