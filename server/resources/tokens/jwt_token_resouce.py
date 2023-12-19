@@ -1,96 +1,129 @@
 import datetime
 from server.models.token_type_model import TokenTypeModel
 from server.models.token_model import TokenModel
+from flask_jwt_extended import create_access_token, create_refresh_token
+from .time_unit import TimeUnit
 
 
 class JwtTokenResouce:
     """
     Resource class for managing JWT tokens.
     """
-    access_token: str
-    refresh_token: str
 
-    def __init__(self):
-        self.access_token = TokenTypeModel.get_by_name('JWT_ACCESS_TOKEN')
-        self.refresh_token = TokenTypeModel.get_by_name('JWT_REFRESH_TOKEN')
+    def create_token(self, user_id: int, token_type: str) -> TokenModel:
+        if token_type == 'access':
+            expires_at = self.create_expiration_date(amount=1)
+            token = self.create_access_token(user_id, expires_at=expires_at)
+        elif token_type == 'refresh':
+            expires_at = self.create_expiration_date(amount=30)
+            token = self.create_refresh_token(user_id, expires_at)
+        else:
+            raise ValueError("Invalid token type")
 
-    def create_token(self, user_id: int, token: str, expires_at: datetime) -> TokenModel:
+        return self._create_and_save_token(user_id, token, expires_at)
+
+    def _create_and_save_token(self, user_id: int, token: str, token_type: str, expires_at: datetime) -> TokenModel:
         """
-        Creates a new token.
+        Creates and saves a token in the database.
 
         Args:
-            user_id (int): The ID of the user.
-            token (str): The token.
+            user_id (int): The ID of the user associated with the token.
+            token (str): The token value.
             expires_at (datetime): The expiration date of the token.
 
         Returns:
-            The created token.
+            TokenModel: The created token model object.
         """
-        return TokenModel.create(token=token, token_type_id=self.token_type.id, user_id=user_id, expires_at=expires_at)
+        token_type: TokenTypeModel = TokenTypeModel.get_by_type(token_type)
+        return TokenModel.create(
+            user_id=user_id, token_type_id=token_type.id, token=token, expires_at=expires_at)
 
-    def get_token(self, token: str) -> TokenModel:
+    def save_token(self, user_id: int, token: str) -> TokenModel:
         """
-        Gets a token by its value.
+        Saves a token in the database.
 
         Args:
-            token (str): The token.
+            user_id (int): The ID of the user associated with the token.
+            token (str): The token value.
 
         Returns:
-            The token if found, or None if not found.
+            TokenModel: The saved token model object.
+        """
+        expires_at: datetime.timedelta = self.create_expiration_date()
+        return self._create_and_save_token(user_id, token, expires_at)
+
+    def _get_token(self, token: str) -> TokenModel:
+        """
+        Retrieves a token from the database.
+
+        Args:
+            token (str): The token value.
+
+        Returns:
+            TokenModel: The retrieved token model object.
         """
         return TokenModel.get_by_token(token)
 
     def update_token(self, token: str, expires_at: datetime) -> None:
         """
-        Updates a token's expiration date.
+        Updates the expiration date of a token in the database.
 
         Args:
-            token (str): The token.
-            expires_at (datetime): The new expiration date.
+            token (str): The token value.
+            expires_at (datetime): The new expiration date of the token.
         """
         TokenModel.update_by_token(token, expires_at)
 
-    def delete_token(self, token: str) -> None:
+    def create_access_token(self, access_token: str, expires_at: datetime.timedelta) -> str:
         """
-        Deletes a token by its value.
+        Creates an access token with a given expiration date.
 
         Args:
-            token (str): The token.
-        """
-        instance = TokenModel.delete_by_token(token)
-
-        if instance is not None:
-            return Exception("Token not deleted")
-
-    def create_tokens(self, user_id) -> tuple[str, str]:
-        """
-        Create access and refresh tokens for the given user ID.
-
-        Parameters:
-            user_id (str): The ID of the user.
+            access_token (str): The access token value.
+            expires_at (datetime.timedelta): The expiration duration of the access token.
 
         Returns:
-            tuple: A tuple containing the access token and refresh token.
+            str: The created access token.
         """
-        access_token: TokenModel = TokenModel.create_token(
-            user_id, self.access_token.token_id, self.access_token.token, datetime.datetime.now() + datetime.timedelta(day=1))
-        refresh_token: TokenModel = TokenModel.create_token(
-            user_id, self.access_token.token_id, self.access_token.token, datetime.datetime.now() + datetime.timedelta(day=30))
-        return access_token, refresh_token
+        access_token = create_access_token(
+            access_token, expires_delta=expires_at)
+        return access_token
 
-    def refresh_tokens(self, refresh_token: str) -> tuple[str, str]:
+    def create_refresh_token(self, refresh_token: str, expires_at: datetime.timedelta) -> tuple[str, str]:
         """
-        Refreshes the access and refresh tokens.
+        Creates a new refresh token with a given expiration date.
 
-        Parameters:
-            refresh_token (str): The refresh token.
+        Args:
+            refresh_token (str): The refresh token value.
+            expires_at (datetime.timedelta): The expiration duration of the refresh token.
 
         Returns:
-            tuple: A tuple containing the access token and refresh token.
+            tuple[str, str]: The created refresh token.
         """
-        refresh_token: TokenModel = TokenModel.get_by_token(refresh_token)
-        access_token: TokenModel = TokenModel.refresh_token(
-            refresh_token.token, datetime.datetime.now() + datetime.timedelta(day=1))
-        refresh_token: TokenModel = TokenModel.refresh_token(
-            refresh_token.token, datetime.datetime.now() + datetime.timedelta(day=30))
-        return access_token, refresh_token
+        refresh_token = create_refresh_token(
+            refresh_token, expires_delta=expires_at)
+        return refresh_token
+
+    def create_expiration_date(self, time_unit: TimeUnit = TimeUnit.DAYS, amount: int = 1) -> datetime.timedelta:
+        """
+        Creates an expiration date based on the given time unit and amount.
+
+        Args:
+            time_unit (TimeUnit): The unit of time to use for expiration (default is TimeUnit.DAYS).
+            amount (int): The amount of time units to add to the current date (default is 1).
+
+        Returns:
+            datetime.timedelta: The expiration date as a timedelta object.
+
+        Raises:
+            ValueError: If an invalid time_unit is provided.
+        """
+        if time_unit == TimeUnit.DAYS:
+            date = datetime.datetime.now() + datetime.timedelta(days=amount)
+        elif time_unit == TimeUnit.HOURS:
+            date = datetime.datetime.now() + datetime.timedelta(hours=amount)
+        elif time_unit == TimeUnit.MINUTES:
+            date = datetime.datetime.now() + datetime.timedelta(minutes=amount)
+        else:
+            raise ValueError(f"Invalid time_unit: {time_unit}")
+        return date

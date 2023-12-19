@@ -3,6 +3,17 @@ from .base_model import BaseModel
 
 
 class TokenTypeModel(BaseModel):
+    """
+        Model for token types.
+
+        This class provides methods for creating, retrieving, updating, and deleting token types.
+
+        Attributes:
+            __tablename__ (str): The name of the database table.
+            id (int): The ID of the token type.
+            token_type (str): The token type.
+            name (str): The name of the token type.
+    """
     __tablename__ = 'token_types'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +21,7 @@ class TokenTypeModel(BaseModel):
     name = db.Column(db.String(50), nullable=False, unique=True)
 
     @classmethod
-    def get_by_name(cls, token_name: str) -> 'TokenTypeModel':
+    def get_by_type(cls, token_name: str) -> 'TokenTypeModel':
         """
             Retrieve a token type by its name.
 

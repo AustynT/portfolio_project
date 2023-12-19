@@ -11,12 +11,14 @@ class TokenModel(BaseModel):
     token = db.Column(db.String(500), nullable=False)
     token_type_id = db.Column(db.Integer, db.ForeignKey(
         'token_types.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.user_id'), nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
 
     token_type = db.relationship(
-        'TokenType', backref=db.backref('tokens', lazy=True))
-    user = db.relationship('User', backref=db.backref('tokens', lazy=True))
+        'TokenTypeModel', backref=db.backref('tokens', lazy=True))
+    user = db.relationship(
+        'UserModel', backref=db.backref('tokens', lazy=True))
 
     @classmethod
     def get_by_token(cls, token: str) -> 'TokenModel':

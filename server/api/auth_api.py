@@ -1,13 +1,13 @@
+from datetime import timedelta
 from typing import Literal
 from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
-from flask_jwt_extended import create_access_token, create_refresh_token
 
 from server import db
 
 from server.models.user_model import UserModel
-# from server.models.token_model import TokenModel
 from server.schemas.auth_schema import AuthSchema
+from server.resources.tokens.jwt_token_resouce import JwtTokenResouce
 
 
 class AuthApi:
@@ -58,7 +58,8 @@ class AuthApi:
         db.session.add(user)
         db.session.commit()
 
-        access_token, refresh_token = self.create_tokens(user.id)
+        access_token, refresh_token = self.token_resource.create_access_token(
+            user.id)
         return jsonify(self.response_schema['register'].dump({
             "id": user.id,
             "email": user.email,
@@ -92,16 +93,38 @@ class AuthApi:
                 "fresh_jwt_token": refresh_token
             }), 200)
 
-    def create_tokens(self, user_id) -> tuple[str, str]:
+    def create_access_tokens(self, user_id: int) -> tuple[str, str]:
         """
-        Create access and refresh tokens for the given user ID.
+        Creates access and refresh tokens for the given user ID.
 
-        Parameters:
-            user_id (str): The ID of the user.
+        Args:
+            user_id (int): The ID of the user to create tokens for.
 
         Returns:
-            tuple: A tuple containing the access token and refresh token.
+            tuple[str, str]: The access token and refresh token.
         """
-        access_token = create_access_token(identity=user_id)
-        refresh_token = create_refresh_token(identity=user_id)
-        return access_token, refresh_token
+        token_resource = JwtTokenResouce()
+        expire_date: timedelta = token_resource.create_expiration_date(
+            amount=1)
+        access_token = token_resource.create_access_token(
+            user_id, expire_date)
+
+        return access_token
+
+    def create_refresh_tokens(self, user_id: int) -> tuple[str, str]:
+        """
+        Creates access and refresh tokens for the given user ID.
+
+        Args:
+            user_id (int): The ID of the user to create tokens for.
+
+        Returns:
+            tuple[str, str]: The access token and refresh token.
+        """
+        token_resource = JwtTokenResouce()
+        expire_date: timedelta = token_resource.create_expiration_date(
+            amount=30)
+        refresh_token = token_resource.create_refresh_token(
+            user_id, expire_date)
+
+        return refresh_token
