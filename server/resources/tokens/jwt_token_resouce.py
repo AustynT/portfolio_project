@@ -77,3 +77,20 @@ class JwtTokenResouce:
         refresh_token: TokenModel = TokenModel.create_token(
             user_id, self.access_token.token_id, self.access_token.token, datetime.datetime.now() + datetime.timedelta(day=30))
         return access_token, refresh_token
+
+    def refresh_tokens(self, refresh_token: str) -> tuple[str, str]:
+        """
+        Refreshes the access and refresh tokens.
+
+        Parameters:
+            refresh_token (str): The refresh token.
+
+        Returns:
+            tuple: A tuple containing the access token and refresh token.
+        """
+        refresh_token: TokenModel = TokenModel.get_by_token(refresh_token)
+        access_token: TokenModel = TokenModel.refresh_token(
+            refresh_token.token, datetime.datetime.now() + datetime.timedelta(day=1))
+        refresh_token: TokenModel = TokenModel.refresh_token(
+            refresh_token.token, datetime.datetime.now() + datetime.timedelta(day=30))
+        return access_token, refresh_token
