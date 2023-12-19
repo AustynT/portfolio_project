@@ -4,6 +4,7 @@ from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 
 from server import db
+from server.models.token_model import TokenModel
 
 from server.models.user_model import UserModel
 from server.schemas.auth_schema import AuthSchema
@@ -93,38 +94,19 @@ class AuthApi:
                 "fresh_jwt_token": refresh_token
             }), 200)
 
-    def create_access_tokens(self, user_id: int) -> tuple[str, str]:
+    def refresh(self) -> tuple[Response, Literal[400]] | Response | None:
         """
-        Creates access and refresh tokens for the given user ID.
-
-        Args:
-            user_id (int): The ID of the user to create tokens for.
+        Refreshes the access token.
 
         Returns:
-            tuple[str, str]: The access token and refresh token.
+            If the refresh token is valid, returns a JSON response containing the new access token.
+            If the refresh token is invalid, returns a JSON response with a message indicating invalid credentials.
         """
-        token_resource = JwtTokenResouce()
-        expire_date: timedelta = token_resource.create_expiration_date(
-            amount=1)
-        access_token = token_resource.create_access_token(
-            user_id, expire_date)
-
-        return access_token
-
-    def create_refresh_tokens(self, user_id: int) -> tuple[str, str]:
-        """
-        Creates access and refresh tokens for the given user ID.
-
-        Args:
-            user_id (int): The ID of the user to create tokens for.
-
-        Returns:
-            tuple[str, str]: The access token and refresh token.
-        """
-        token_resource = JwtTokenResouce()
-        expire_date: timedelta = token_resource.create_expiration_date(
-            amount=30)
-        refresh_token = token_resource.create_refresh_token(
-            user_id, expire_date)
-
-        return refresh_token
+        refresh_token = request.get_json()
+        token: JwtTokenResouce = JwtTokenResouce()
+        token_instance: TokenModel = token.validate_refresh_token(
+            refresh_token)
+        if token_instance:
+            return jsonify({
+                "jwt_token": token_instance.token
+            }), 200
