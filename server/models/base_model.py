@@ -50,6 +50,33 @@ class BaseModel(db.Model):
         instance = cls.query.get(model_id)
         return instance
 
+    @classmethod
+    def get_all_by(cls, string) -> 'BaseModel':
+        """
+        Retrieve all model instances from the database that match the given string.
+
+        Args:
+            string: The string to match.
+
+        Returns:
+            instances (list[BaseModel]): The retrieved model instances.
+
+        """
+        instances = cls.query.filter(func.lower(cls.name) == string.lower())
+        return instances
+
+    @classmethod
+    def get_all(cls) -> 'BaseModel':
+        """
+        Retrieve all model instances from the database.
+
+        Returns:
+            instances (list[BaseModel]): The retrieved model instances.
+
+        """
+        instances = cls.query.all()
+        return instances
+
     def update(self, **kwargs) -> None:
         """
         Update the attributes of the model instance and save the changes to the database.
