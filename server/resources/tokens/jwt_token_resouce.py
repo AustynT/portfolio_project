@@ -1,7 +1,11 @@
 import datetime
+
+import jwt
 from server.models.token_type_model import TokenTypeModel
 from server.models.token_model import TokenModel
 from flask_jwt_extended import create_access_token, create_refresh_token
+
+from server.models.user_model import UserModel
 from .time_unit import TimeUnit
 
 
@@ -21,6 +25,24 @@ class JwtTokenResouce:
             raise ValueError("Invalid token type")
 
         return self._create_and_save_token(user_id, token, expires_at)
+
+    def update_refresh_token(self, refresh_token: str) -> TokenModel:
+        """
+        Updates the refresh token and returns a new access token.
+
+        Args:
+            refresh_token (str): The refresh token to update.
+
+        Returns:
+            TokenModel: The updated token model containing the new access token.
+        """
+
+        user_id = self.validate_refresh_token(refresh_token)
+
+        expires_at = self.create_expiration_date(amount=1)
+        new_access_token = self.create_access_token(user_id, expires_at)
+
+        return self._get_token(new_access_token)
 
     def _create_and_save_token(self, user_id: int, token: str, token_type: str, expires_at: datetime) -> TokenModel:
         """
@@ -127,3 +149,23 @@ class JwtTokenResouce:
         else:
             raise ValueError(f"Invalid time_unit: {time_unit}")
         return date
+
+    def validate_refresh_token(self, refresh_token):
+        try:
+            # Decode the token using your secret key
+            # Note: replace 'your-secret-key' with your actual secret key
+            payload = jwt.decode(
+                refresh_token, 'your-secret-key', algorithms=['HS256'])
+
+            # Get the user_id from the payload
+            user_id = payload['user_id']
+
+            # check if user is still in database if not raise error
+            if not UserModel.get_by_id(user_id):
+                raise ValueError("The user does not exist")
+            return payload
+
+        except jwt.ExpiredSignatureError:
+            raise ValueError("The refresh token is expired")
+        except jwt.DecodeError:
+            raise ValueError("The refresh token is invalid")
