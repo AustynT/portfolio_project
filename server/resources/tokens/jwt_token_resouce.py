@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import jwt
 from server.models.token_type_model import TokenTypeModel
@@ -26,7 +27,7 @@ class JwtTokenResouce:
 
         return self._create_and_save_token(user_id, token, expires_at)
 
-    def update_refresh_token(self, refresh_token: str) -> TokenModel:
+    def refresh_access_token(self, refresh_token: str) -> TokenModel:
         """
         Updates the refresh token and returns a new access token.
 
@@ -42,7 +43,7 @@ class JwtTokenResouce:
         expires_at = self.create_expiration_date(amount=1)
         new_access_token = self.create_access_token(user_id, expires_at)
 
-        return self._get_token(new_access_token)
+        return self.update_token(new_access_token, expires_at)
 
     def _create_and_save_token(self, user_id: int, token: str, token_type: str, expires_at: datetime) -> TokenModel:
         """
@@ -86,7 +87,7 @@ class JwtTokenResouce:
         """
         return TokenModel.get_by_token(token)
 
-    def update_token(self, token: str, expires_at: datetime) -> None:
+    def update_token(self, token: str, expires_at: datetime) -> TokenModel:
         """
         Updates the expiration date of a token in the database.
 
@@ -94,7 +95,7 @@ class JwtTokenResouce:
             token (str): The token value.
             expires_at (datetime): The new expiration date of the token.
         """
-        TokenModel.update_by_token(token, expires_at)
+        return TokenModel.update_by_token(token, expires_at)
 
     def create_access_token(self, access_token: str, expires_at: datetime.timedelta) -> str:
         """
@@ -150,22 +151,17 @@ class JwtTokenResouce:
             raise ValueError(f"Invalid time_unit: {time_unit}")
         return date
 
-    def validate_refresh_token(self, refresh_token):
-        try:
-            # Decode the token using your secret key
-            # Note: replace 'your-secret-key' with your actual secret key
-            payload = jwt.decode(
-                refresh_token, 'your-secret-key', algorithms=['HS256'])
+    def validate_refresh_token(self, refresh_token, user_id: int) -> TokenModel:
+        # check the refresh token and the user id to make they are valid
+        token = self._get_token(refresh_token)
+        if token.user_id != user_id:
+            raise ValueError("Invalid refresh token")
 
-            # Get the user_id from the payload
-            user_id = payload['user_id']
+        # check if the token is expired
+        if token.expires_at < datetime.datetime.now():
+            raise ValueError("Refresh token has expired")
 
-            # check if user is still in database if not raise error
-            if not UserModel.get_by_id(user_id):
-                raise ValueError("The user does not exist")
-            return payload
+        # update the access token with the refresh token
+        access_token: TokenModel = self.refresh_access_token(refresh_token)
 
-        except jwt.ExpiredSignatureError:
-            raise ValueError("The refresh token is expired")
-        except jwt.DecodeError:
-            raise ValueError("The refresh token is invalid")
+        return access_token
