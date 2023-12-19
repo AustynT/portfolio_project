@@ -35,5 +35,3 @@ def register_routes(app) -> None:
     app.register_blueprint(project_api.bp_project)
     project_skill_api = ProjectSkillApi()
     app.register_blueprint(project_skill_api.bp_project_skill)
-    token_type = TokenTypeApi()
-    app.register_blueprint(token_type.bp_token_type)
