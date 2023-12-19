@@ -11,8 +11,8 @@ class UserApi:
 
     def __init__(self):
         self.bp_user = Blueprint('users', __name__, url_prefix='/user')
-        self.bp_user.route(
-            '/', methods=['GET'])(jwt_required()(self.get_users))
+        self.bp_user.route('/', methods=['GET']
+                           )(jwt_required()(self.get_users))
         self.bp_user.route(
             '/<int:user_id>', methods=['GET'])(self.get_user_by_id)
         self.bp_user.route(

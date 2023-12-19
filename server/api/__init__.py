@@ -9,13 +9,13 @@ from .hobby_api import HobbyApi
 from .hobby_skill_api import HobbySkillApi
 from .project_api import ProjectApi
 from .project_skill_api import ProjectSkillApi
+from .token_type_api import TokenTypeApi
 
 
-def register_routes(app):
+def register_routes(app) -> None:
     auth_api = AuthApi()
     app.register_blueprint(auth_api.bp_auth)
     user_api = UserApi()
-
     app.register_blueprint(user_api.bp_user)
     user_info_api = UserInfoApi()
     app.register_blueprint(user_info_api.bp_user_info)
@@ -35,3 +35,5 @@ def register_routes(app):
     app.register_blueprint(project_api.bp_project)
     project_skill_api = ProjectSkillApi()
     app.register_blueprint(project_skill_api.bp_project_skill)
+    token_type = TokenTypeApi()
+    app.register_blueprint(token_type.bp_token_type)

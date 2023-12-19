@@ -49,7 +49,7 @@ class ProjectSkillApi:
         Returns:
             A JSON response containing the serialized project skill if found, or a JSON response with an error message and status code 404 if not found.
         """
-        project_skill_instance = self.model.get_project_skill_by_id(
+        project_skill_instance = self.model.get(
             project_skill_id)
         if project_skill_instance:
             return jsonify(project_skill_instance.serialize())
